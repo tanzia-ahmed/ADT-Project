@@ -1,13 +1,11 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
 
-public class ListUndirected {
+public class Graph {
 
 	private LinkedList<Integer>[ ] adj;
 	private int V; // number of vertices
@@ -15,7 +13,7 @@ public class ListUndirected {
 	int prev_Node; //Previous Node
 	int current_Node; //Current Node
 	
-	public ListUndirected(int nodes) {
+	public Graph(int nodes) {
 		this.V = nodes;
 		this.E = 0;
 		this.adj = new LinkedList[nodes];
@@ -61,46 +59,84 @@ public class ListUndirected {
 		}
 		return lines;
 	}
-	/*
-	void DFSUtil(int v, boolean visited[]) {
-		visited[v]=true;
-		System.out.print(v + " ");
-		Iterator<Integer> i = adj[v].listIterator();
-		
-		if() //If it's the 0th node then don't add direction
-			// Prev Node = Current Node
-		else
-		{
-			// Current node
-			// We can call edge function for prev node -> Current Node
-			//Prev node = current node
-		}
-		while(i.hasNext()) {
-			int n=i.next();
-			if(!visited[n])
-				DFSUtil(n,visited);
-		}
-	}
+
+//	void DFSUtil(int v, boolean visited[]) {
+//		visited[v]=true;
+//		System.out.print(v + " ");
+//
+//		Iterator<Integer> i = adj[v].listIterator();
+//
+////		if() //If it's the 0th node then don't add direction
+////			// Prev Node = Current Node
+////		else
+////		{
+//			// Current node
+//			// We can call edge function for prev node -> Current Node
+//			//Prev node = current node
+////		}
+//		while(i.hasNext()) {
+//			int n=i.next();
+//			if(!visited[n]) {
+//				DFSUtil(n, visited);
+//
+//			}
+//		}
+//	}
+//
+//	void DFS(int v) {
+//		boolean visited[]=new boolean[V];
+//		DFSUtil(v,visited);
+//	}
 	
-	void DFS(int v) {
-		boolean visited[]=new boolean[V];
-		DFSUtil(v,visited);
-	}*/
-	
-	public void dfs(int s) {
+	public boolean dfs(int s) {
 		boolean[] visited = new boolean[V];
 		Stack<Integer> stack = new Stack<>();
 		stack.push(s);
-		int top = stack.peek();
-		System.out.println(prev_Node);
-		
-		if(top==s) {
-			prev_Node=s;
+//		int top = stack.peek();
+//		System.out.println(prev_Node);
+//
+//		if(top==s) {
+//			prev_Node=s;
+//		}
+//		else {
+//			current_Node= top;
+//
+//		}
+
+		boolean connected = false;
+		while(!stack.isEmpty()) {
+			int u = stack.pop();
+			if(!visited[u]) {
+				visited[u] = true;
+				System.out.print(u + " ");
+
+				for(int v : adj[u]) {
+					if(!visited[v]) {
+						stack.push(v);
+					}
+				}
+			}
 		}
-		else {
-			current_Node= top;
-			
+
+		int visitedcount = 0;
+		for(int i=0; i< visited.length; i++){
+			if(visited[i]==true)
+				visitedcount++;
 		}
+
+		if(V == visitedcount)
+			connected = true;
+
+		return connected;
+	}
+
+	public Graph Orientation (){
+
+		Graph g1 = new Graph(V);
+
+		boolean[] visited = new boolean[V];
+		Stack<Integer> stack = new Stack<>();
+		stack.push(s);
 
 		while(!stack.isEmpty()) {
 			int u = stack.pop();
@@ -115,7 +151,11 @@ public class ListUndirected {
 				}
 			}
 		}
+
+		return null;
 	}
+
+
 
 	
 	public static void main(String[] args) {
@@ -126,7 +166,7 @@ public class ListUndirected {
 		
 		 int noOfVertices = checkNoOfLines(fileName);
 		
-		 ListUndirected g = new ListUndirected(noOfVertices);
+		 Graph g = new Graph(noOfVertices);
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -154,7 +194,11 @@ public class ListUndirected {
 	
 		System.out.println(g);
 		System.out.println("DFS Traversal: \n");
-		g.dfs(0);
+		boolean y = g.dfs(0);
+		System.out.println(y);
+		if (y==true){
+			g.Orientation();
+		}
 	}
 
 	
