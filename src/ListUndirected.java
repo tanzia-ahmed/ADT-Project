@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class ListUndirected {
 
 	private LinkedList<Integer>[ ] adj;
 	private int V; // number of vertices
 	private int E; // number of edges
+	int prev_Node; //Previous Node
+	int current_Node; //Current Node
 	
 	public ListUndirected(int nodes) {
 		this.V = nodes;
@@ -58,11 +61,20 @@ public class ListUndirected {
 		}
 		return lines;
 	}
-	
+	/*
 	void DFSUtil(int v, boolean visited[]) {
 		visited[v]=true;
 		System.out.print(v + " ");
 		Iterator<Integer> i = adj[v].listIterator();
+		
+		if() //If it's the 0th node then don't add direction
+			// Prev Node = Current Node
+		else
+		{
+			// Current node
+			// We can call edge function for prev node -> Current Node
+			//Prev node = current node
+		}
 		while(i.hasNext()) {
 			int n=i.next();
 			if(!visited[n])
@@ -73,7 +85,38 @@ public class ListUndirected {
 	void DFS(int v) {
 		boolean visited[]=new boolean[V];
 		DFSUtil(v,visited);
+	}*/
+	
+	public void dfs(int s) {
+		boolean[] visited = new boolean[V];
+		Stack<Integer> stack = new Stack<>();
+		stack.push(s);
+		int top = stack.peek();
+		System.out.println(prev_Node);
+		
+		if(top==s) {
+			prev_Node=s;
+		}
+		else {
+			current_Node= top;
+			
+		}
+
+		while(!stack.isEmpty()) {
+			int u = stack.pop();
+			if(!visited[u]) {
+				visited[u] = true;
+				System.out.print(u + " ");
+
+				for(int v : adj[u]) {
+					if(!visited[v]) {
+						stack.push(v);
+					}
+				}
+			}
+		}
 	}
+
 	
 	public static void main(String[] args) {
 
@@ -111,7 +154,7 @@ public class ListUndirected {
 	
 		System.out.println(g);
 		System.out.println("DFS Traversal: \n");
-		g.DFS(1);
+		g.dfs(0);
 	}
 
 	
