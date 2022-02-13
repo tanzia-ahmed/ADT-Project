@@ -1,3 +1,5 @@
+import kotlin.reflect.jvm.internal.impl.types.model.TypeSystemOptimizationContext;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,7 +13,7 @@ public class Graph {
 	private int V; // number of vertices
 	private int E; // number of edges
 	int prev_Node; //Previous Node
-	int current_Node; //Current Node
+	int current_Node=0; //Current Node
 	
 	public Graph(int nodes) {
 		this.V = nodes;
@@ -28,6 +30,14 @@ public class Graph {
 		adj[u].add(v);
 		adj[v].add(u);
 		E++;
+		}
+	}
+
+	public void addDirectedEdge(int u, int v) {
+
+		if(!adj[u].contains(v)) {
+			adj[u].add(v);
+			E++;
 		}
 	}
 	
@@ -88,7 +98,7 @@ public class Graph {
 //		DFSUtil(v,visited);
 //	}
 	
-	public boolean dfs(int s) {
+	public boolean isConnected(int s) {
 		boolean[] visited = new boolean[V];
 		Stack<Integer> stack = new Stack<>();
 		stack.push(s);
@@ -130,29 +140,36 @@ public class Graph {
 		return connected;
 	}
 
-	public Graph Orientation (){
-
+	public Graph Orientation (int s){
 		Graph g1 = new Graph(V);
-
 		boolean[] visited = new boolean[V];
 		Stack<Integer> stack = new Stack<>();
 		stack.push(s);
+		prev_Node = 0;
 
 		while(!stack.isEmpty()) {
 			int u = stack.pop();
-			if(!visited[u]) {
-				visited[u] = true;
-				System.out.print(u + " ");
+			if (current_Node == 0){}
+			else{
+				g1.addDirectedEdge(prev_Node, current_Node);
+			}
+				if (!visited[u]) {
+					if(u==0)
+						visited[u]=false;
+					else{
+						visited[u] = true;
+					}
+					prev_Node=u;
+					for (int v : adj[u]) {
+							if (!visited[v]) {
+								stack.push(v);
+								current_Node=v;
 
-				for(int v : adj[u]) {
-					if(!visited[v]) {
-						stack.push(v);
+							}
+						}
 					}
 				}
-			}
-		}
-
-		return null;
+		return g1;
 	}
 
 
@@ -194,11 +211,13 @@ public class Graph {
 	
 		System.out.println(g);
 		System.out.println("DFS Traversal: \n");
-		boolean y = g.dfs(0);
-		System.out.println(y);
+		boolean y = g.isConnected(0);
+		System.out.println("\n"+y);
 		if (y==true){
-			g.Orientation();
+			Graph grp = g.Orientation(0);
+			System.out.println(grp);
 		}
+
 	}
 
 	
