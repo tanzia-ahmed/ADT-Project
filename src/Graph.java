@@ -275,7 +275,7 @@ private LinkedList<Integer>[ ] adj;
 		Stack<Integer> stack = new Stack<>();
 		stack.push(s);
 		prev_Node = 0;
-		int iteration =0;
+
 			while(!stack.isEmpty()) {
 				int u = stack.pop();
 				if (current_Node == 0){}
@@ -301,22 +301,31 @@ private LinkedList<Integer>[ ] adj;
 								}
 							}
 						}
-				
+
 			}
 			System.out.println("The RED path for covid patients is: " + covid_Path);
-			
+
+			int iteration =0;
+			stack.push(s);
+			//reset visited[]
+			for(int c=0; c< visited.length; c++){
+				visited[c] = false;
+			}
 			while(!stack.isEmpty()) {
-				
+				iteration++;
 				int u = stack.pop();
 				if (current_Node == 0){}
-				else if(current_Node==V-1 && prev_Node==V-1) {
+				else if(current_Node==1 && prev_Node==1) {
 					prev_Node=current_Node;
 					current_Node=s;
-					g.addReverseEdge(prev_Node, current_Node);
+					g.addDirectedEdge(prev_Node, current_Node);
+					nonCovid_Path.add(prev_Node);
+					nonCovid_Path.add(current_Node);
 					
 				}
-				else if (current_Node==1){
-					g.addReverseEdge(prev_Node, current_Node);
+				else {
+					g.addDirectedEdge(prev_Node, current_Node);
+					nonCovid_Path.add(prev_Node);
 				}
 					if (!visited[u]) {
 						visited[u]=true;
@@ -331,15 +340,18 @@ private LinkedList<Integer>[ ] adj;
 						if(iteration == 1) {
 							Stack stack2 = new Stack();
 							while (!stack.isEmpty()) {
-								stack2.push(stack.pop()); //stack2-> 1,12 (top)
+								int v = stack.pop();
+								stack2.push(v); //stack2-> 1,12 (top)
+								current_Node=v;
 							}
 							stack = stack2;
 						}
 						
 				}
 		}
+		System.out.println("The Green path for non-covid patients is: " + nonCovid_Path);
 		
-		return g;
+	return g;
 	}
 	
 
