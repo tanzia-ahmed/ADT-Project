@@ -15,6 +15,7 @@ private LinkedList<Integer>[ ] adj;
 	int current_Node=0; //Current Node
 	int time=0;
 	int countBridge=0;
+	Stack<Integer> bridge_edges = new Stack<>();
 	
 	public Graph(int nodes) {
 		this.V = nodes;
@@ -156,7 +157,9 @@ private LinkedList<Integer>[ ] adj;
                 {
                 	countBridge++;
                     System.out.println(u+" "+v);
-                    addReverseEdge(u,v);
+                    bridge_edges.push(u);
+                    bridge_edges.push(v);
+//                    addReverseEdge(u,v);
                	}
             } 
   
@@ -246,6 +249,19 @@ private LinkedList<Integer>[ ] adj;
 			else if(current_Node==V-1 && prev_Node==V-1) {
 				prev_Node=current_Node;
 				current_Node=s;
+
+//				if (adj[current_Node].contains(s))
+//					current_Node=s;
+//				else if(current_Node==V-1)
+//				{
+//					int min = 9999;
+//					for(int v: adj[current_Node]){
+//						if (v<min){
+//							min = v;
+//						}
+//					}
+//					current_Node = min;
+//				}
 				g.addDirectedEdge(prev_Node, current_Node);
 			}
 			else{
@@ -264,6 +280,12 @@ private LinkedList<Integer>[ ] adj;
 					}
 				}
 		bridge();
+		while (!bridge_edges.isEmpty()){
+			int v = bridge_edges.pop();
+			int u = bridge_edges.pop();
+			g.addReverseEdge(u,v);
+			//g.addDirectedEdge(u,v);
+		}
 		//System.out.println("There were "++" number of bridges, in which we have added reverse edges.");
 		return g;
 	}

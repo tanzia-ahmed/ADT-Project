@@ -52,15 +52,16 @@ public class Case2 {
 		if(feasible) {
 	    	System.out.println("Graph is feasible for One-Way/Two-Way Street problem.");
 	    	Graph DirectedGraph = new Graph(inputGraph.V);
-	    	DirectedGraph =	inputGraph.Orientation1(0);
-	    	System.out.println(DirectedGraph);
-	    	int n = DirectedGraph.bridge();
+	    	DirectedGraph =	inputGraph.Orientation2(0);
+//	    	System.out.println(DirectedGraph);
+//	    	int n = DirectedGraph.bridge();
 	    	//Graph OrientedGraph = new Graph(noOfVertices);
 	    	
 	    	//OrientedGraph.bridge();
 	    	
 	    	System.out.println("The graph with one-way/two-way after orientation algorithm is: ");
             System.out.println(DirectedGraph);
+			DirectedGraph.bridge();
             
 	    }
 	    else {
