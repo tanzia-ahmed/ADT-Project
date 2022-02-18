@@ -44,10 +44,19 @@ public class Case3 {
 		}
 		System.out.println("The Graph read from the file is: ");
 		System.out.println(inputGraph);
-		Graph DirectedGraph = new Graph(inputGraph.V);
 		
-    	DirectedGraph =	inputGraph.Orientation3(0);
-    	System.out.println(DirectedGraph);
+		 boolean feasible = inputGraph.Connected(0) && (inputGraph.bridge() == 0);
+		 
+		 if(feasible) {
+			 Graph DirectedGraph = new Graph(inputGraph.V);
+				
+		    	DirectedGraph =	inputGraph.Orientation3(0);
+		    	System.out.println(DirectedGraph);
+		 }
+		 else {
+			 System.out.println("Graph is not feasible. Cannot provide Orientation without having a common edge for COVID and non-COVID patients");
+		 }
+		
 
 	}
 
