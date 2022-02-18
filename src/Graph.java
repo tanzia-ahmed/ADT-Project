@@ -17,6 +17,7 @@ private LinkedList<Integer>[ ] adj;
 	int countBridge=0;
 	Stack<Integer> bridge_edges = new Stack<>();
 	
+	
 	public Graph(int nodes) {
 		this.V = nodes;
 		this.E = 0;
@@ -42,7 +43,7 @@ private LinkedList<Integer>[ ] adj;
 
 	public void addDirectedEdge(int u, int v) {
 
-		if(!adj[u].contains(v)) {
+		if(!adj[u].contains(v) && u!=v) {
 			adj[u].add(v);
 			E++;
 		}
@@ -115,44 +116,28 @@ private LinkedList<Integer>[ ] adj;
 
 		return connected;
 	}
-	
-	// A recursive function that finds and prints bridges 
-    // using DFS traversal 
-    // u --> The vertex to be visited next 
-    // visited[] --> keeps tract of visited vertices 
-    // disc[] --> Stores discovery times of visited vertices 
-    // parent[] --> Stores parent vertices in DFS tree 
+
     int bridgeUtil(int u, boolean visited[], int disc[], 
                     int low[], int parent[]) 
     { 
-    	
-        // Mark the current node as visited 
         visited[u] = true; 
   
-        // Initialize discovery time and low value 
         disc[u] = low[u] = ++time; 
   
-        // Go through all vertices aadjacent to this 
         Iterator<Integer> i = adj[u].iterator(); 
         while (i.hasNext()) 
         { 
-            int v = i.next();  // v is current adjacent of u 
+            int v = i.next();   
   
-            // If v is not visited yet, then make it a child 
-            // of u in DFS tree and recur for it. 
-            // If v is not visited yet, then recur for it 
+
             if (!visited[v]) 
             { 
                 parent[v] = u; 
                 bridgeUtil(v, visited, disc, low, parent); 
   
-                // Check if the subtree rooted with v has a 
-                // connection to one of the ancestors of u 
+                
                 low[u]  = Math.min(low[u], low[v]); 
-  
-                // If the lowest vertex reachable from subtree 
-                // under v is below u in DFS tree, then u-v is 
-                // a bridge 
+
                 if (low[v] > disc[u]) 
                 {
                 	countBridge++;
@@ -171,28 +156,20 @@ private LinkedList<Integer>[ ] adj;
         return countBridge;
     } 
   
-  
-    // DFS based function to find all bridges. It uses recursive 
-    // function bridgeUtil() 
     int bridge() 
     { 
-        // Mark all the vertices as not visited 
         boolean visited[] = new boolean[V]; 
         int disc[] = new int[V]; 
         int low[] = new int[V]; 
         int parent[] = new int[V]; 
   
-  
-        // Initialize parent and visited, and ap(articulation point) 
-        // arrays 
         for (int i = 0; i < V; i++) 
         { 
             parent[i] = 0; 
             visited[i] = false; 
         } 
   
-        // Call the recursive helper function to find Bridges 
-        // in DFS tree rooted with vertex 'i' 
+
         int bridge_total = 0;
         for (int i = 0; i < V; i++) 
         {
@@ -243,50 +220,43 @@ private LinkedList<Integer>[ ] adj;
 		stack.push(s);
 		prev_Node = 0;
 
+		bridge();
+		while (!bridge_edges.isEmpty()){
+			int v = bridge_edges.pop();
+			int u = bridge_edges.pop();
+			g.addEdge(u,v);
+			//g.addDirectedEdge(u,v);
+		}
+
 		while(!stack.isEmpty()) {
 			int u = stack.pop();
 			if (current_Node == 0){}
 			else if(current_Node==V-1 && prev_Node==V-1) {
 				prev_Node=current_Node;
 				current_Node=s;
-
-//				if (adj[current_Node].contains(s))
-//					current_Node=s;
-//				else if(current_Node==V-1)
-//				{
-//					int min = 9999;
-//					for(int v: adj[current_Node]){
-//						if (v<min){
-//							min = v;
-//						}
-//					}
-//					current_Node = min;
-//				}
 				g.addDirectedEdge(prev_Node, current_Node);
 			}
 			else{
 				g.addDirectedEdge(prev_Node, current_Node);
 			}
 				if (!visited[u]) {
-					visited[u]=true;
-					prev_Node=u;
-					for (int v : adj[u]) {
-							if (!visited[v]) {
-								stack.push(v);
-								current_Node=v;
+					
+					visited[u] = true;
+					
+						prev_Node=u;
+						for (int v : adj[u]) {
+								if (!visited[v]) {
+									stack.push(v);
+									current_Node=v;
 
+								}
 							}
-						}
+				
+					
 					}
-				}
-		bridge();
-		while (!bridge_edges.isEmpty()){
-			int v = bridge_edges.pop();
-			int u = bridge_edges.pop();
-			g.addReverseEdge(u,v);
-			//g.addDirectedEdge(u,v);
-		}
-		//System.out.println("There were "++" number of bridges, in which we have added reverse edges.");
+
+		
+	}
 		return g;
 	}
 	public Graph Orientation3 (int s){
