@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -264,6 +265,80 @@ private LinkedList<Integer>[ ] adj;
 				}
 		bridge();
 		//System.out.println("There were "++" number of bridges, in which we have added reverse edges.");
+		return g;
+	}
+	public Graph Orientation3 (int s){
+		Graph g = new Graph(V);
+		ArrayList<Integer> covid_Path = new ArrayList();
+		ArrayList<Integer> nonCovid_Path = new ArrayList();
+		boolean[] visited = new boolean[V];
+		Stack<Integer> stack = new Stack<>();
+		stack.push(s);
+		prev_Node = 0;
+		int iteration =0;
+			while(!stack.isEmpty()) {
+				int u = stack.pop();
+				if (current_Node == 0){}
+				else if(current_Node==V-1 && prev_Node==V-1) {
+					prev_Node=current_Node;
+					current_Node=s;
+					g.addDirectedEdge(prev_Node, current_Node);
+					covid_Path.add(prev_Node);
+					covid_Path.add(current_Node);
+				}
+				else{
+					g.addDirectedEdge(prev_Node, current_Node);
+					covid_Path.add(prev_Node);
+				}
+					if (!visited[u]) {
+						visited[u]=true;
+						prev_Node=u;
+						for (int v : adj[u]) {
+								if (!visited[v]) {
+									stack.push(v);
+									current_Node=v;
+
+								}
+							}
+						}
+				
+			}
+			System.out.println("The RED path for covid patients is: " + covid_Path);
+			
+			while(!stack.isEmpty()) {
+				
+				int u = stack.pop();
+				if (current_Node == 0){}
+				else if(current_Node==V-1 && prev_Node==V-1) {
+					prev_Node=current_Node;
+					current_Node=s;
+					g.addReverseEdge(prev_Node, current_Node);
+					
+				}
+				else if (current_Node==1){
+					g.addReverseEdge(prev_Node, current_Node);
+				}
+					if (!visited[u]) {
+						visited[u]=true;
+						prev_Node=u;
+						for (int v : adj[u]) {
+								if (!visited[v]) {
+									stack.push(v);
+									current_Node=v;
+								}
+							}
+						
+						if(iteration == 1) {
+							Stack stack2 = new Stack();
+							while (!stack.isEmpty()) {
+								stack2.push(stack.pop()); //stack2-> 1,12 (top)
+							}
+							stack = stack2;
+						}
+						
+				}
+		}
+		
 		return g;
 	}
 	
